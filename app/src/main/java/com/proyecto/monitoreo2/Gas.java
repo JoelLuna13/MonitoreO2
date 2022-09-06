@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.ekn.gruzer.gaugelibrary.ArcGauge;
 import com.ekn.gruzer.gaugelibrary.HalfGauge;
 import com.ekn.gruzer.gaugelibrary.MultiGauge;
 import com.ekn.gruzer.gaugelibrary.Range;
@@ -30,8 +31,8 @@ import java.net.URL;
 
 public class Gas extends Fragment {
 
-    MultiGauge Medidor;
-    com.ekn.gruzer.gaugelibrary.Range Rango_1,Rango_2,Rango_3,Rango_4; //Estos rangos son para los colores
+    ArcGauge Medidor, MedOxigeno, Medoxidi, Meddioxido;
+    com.ekn.gruzer.gaugelibrary.Range Rango_1,Rango_2,Rango_3, Rango_4; //Estos rangos son para los colores
     TextView txttit, txtmen;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,11 @@ public class Gas extends Fragment {
         txttit = (TextView) principal.findViewById(R.id.txtTit);
         txtmen = (TextView) principal.findViewById(R.id.txtmensaje);
 
-        Medidor = (MultiGauge) principal.findViewById(R.id.Medgas);
+        Medidor = (ArcGauge) principal.findViewById(R.id.Medgas);
+        MedOxigeno = (ArcGauge) principal.findViewById(R.id.MedOxigeno);
+        Medoxidi = (ArcGauge) principal.findViewById(R.id.Medoxidi);
+        Meddioxido = (ArcGauge) principal.findViewById(R.id.Meddioxido);
+
         Rango_1 = new Range();
         Rango_2 = new Range();
         Rango_3 = new Range();
@@ -59,9 +64,9 @@ public class Gas extends Fragment {
         Rango_3.setFrom(70);Rango_3.setTo(350);
         Rango_4.setFrom(350);Rango_3.setTo(400);
 
-        Medidor.addRange(Rango_1);
-        Medidor.addRange(Rango_2);
-        Medidor.addRange(Rango_3);
+        MedOxigeno.addRange(Rango_1);
+        Medoxidi.addRange(Rango_2);
+        Meddioxido.addRange(Rango_3);
         Medidor.addRange(Rango_4);
 
         Rango_1.setColor(Color.GREEN);
@@ -69,9 +74,21 @@ public class Gas extends Fragment {
         Rango_3.setColor(Color.BLUE);
         Rango_4.setColor(Color.RED);
 
-        Medidor.setMinValue(0);
+        MedOxigeno.setMinValue(0);
+        MedOxigeno.setMaxValue(55);
+        MedOxigeno.setValue(0);
+
+        Medoxidi.setMinValue(55);
+        Medoxidi.setMaxValue(70);
+        Medoxidi.setValue(55);
+
+        Meddioxido.setMinValue(70);
+        Meddioxido.setMaxValue(350);
+        Meddioxido.setValue(70);
+
+        Medidor.setMinValue(350);
         Medidor.setMaxValue(400);
-        Medidor.setValue(0);
+        Medidor.setValue(350);
 
 
 
@@ -142,12 +159,15 @@ public class Gas extends Fragment {
 
 
             }
-
-            Medidor.setValue(men);
+            //Medidor.setValue(men);
             txttit.setText(mensaje);
             if (men>=0 &&  men<= 55)
             {
-                txtmen.setText("No hay presencia");
+                MedOxigeno.setValue(men);
+                Medoxidi.setValue(0);
+                Meddioxido.setValue(0);
+                Medidor.setValue(0);
+                txtmen.setText("El aire esta limpio");
                 txttit.setTextColor(Color.GREEN);
                 txtmen.setTextColor(Color.GREEN);
             }
@@ -157,6 +177,10 @@ public class Gas extends Fragment {
                 {
                     //mensaje = "Aire limpio con poca presencia de dioxido de carbono";
 
+                    MedOxigeno.setValue(0);
+                    Medoxidi.setValue(men);
+                    Meddioxido.setValue(0);
+                    Medidor.setValue(0);
                     txtmen.setText("Hay poca presencia de dioxido de carbono en el ambiente");
                     txttit.setTextColor(Color.GREEN);
                     txtmen.setTextColor(Color.GREEN);
@@ -166,6 +190,10 @@ public class Gas extends Fragment {
                 {
                     if (men>70 &&  men<= 350)
                     {
+                        MedOxigeno.setValue(0);
+                        Medoxidi.setValue(0);
+                        Meddioxido.setValue(men);
+                        Medidor.setValue(0);
 
                         txtmen.setText("Peligro: Presencia de dioxido de carbono en el ambiente");
                         txttit.setTextColor(Color.BLUE);
@@ -192,6 +220,10 @@ public class Gas extends Fragment {
                     {
                         if (men>350)
                         {
+                            MedOxigeno.setValue(0);
+                            Medoxidi.setValue(0);
+                            Meddioxido.setValue(0);
+                            Medidor.setValue(men);
 
                             txtmen.setText("Peligro: Presencia de gases toxicos en el ambiente");
                             txttit.setTextColor(Color.RED);
